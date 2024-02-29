@@ -1,5 +1,7 @@
 package assignment.birds;
 
+import javafx.scene.chart.PieChart;
+
 public class OrderedDictionary implements OrderedDictionaryADT {
 
     Node root;
@@ -20,30 +22,16 @@ public class OrderedDictionary implements OrderedDictionaryADT {
     public BirdRecord find(DataKey k) throws DictionaryException {
         Node current = root;
         int comparison;
+        // If the root is empty, there is nothing to search
         if (root.isEmpty()) {         
             throw new DictionaryException("There is no record matches the given key");
         }
 
-        while (true) {
-            comparison = current.getData().getDataKey().compareTo(k);
-            if (comparison == 0) { // key found
-                return current.getData();
-            }
-            if (comparison == 1) {
-                if (current.getLeftChild() == null) {
-                    // Key not found
-                    throw new DictionaryException("There is no record matches the given key");
-                }
-                current = current.getLeftChild();
-            } else if (comparison == -1) {
-                if (current.getRightChild() == null) {
-                    // Key not found
-                    throw new DictionaryException("There is no record matches the given key");
-                }
-                current = current.getRightChild();
-            }
-        }
-
+        Node node = searchDict(current, k);
+        // If the node can't be found, it doesn't exist
+        if(node == null) {
+            throw new DictionaryException("There is no record matches the given key");
+        } else return node.getData();
     }
 
     /**
@@ -58,9 +46,7 @@ public class OrderedDictionary implements OrderedDictionaryADT {
         // Write this method
         //System.out.println("INSIDE INSERT");
         root = insertRecursive(root,null, r);
-        /*if(root.hasLeftChild()){
-            System.out.println(root.getLeftChild().getData().getDataKey().getBirdName());
-        }*/
+
     }
 
     private Node insertRecursive(Node root, Node parent, BirdRecord r) {
@@ -92,6 +78,58 @@ public class OrderedDictionary implements OrderedDictionaryADT {
     @Override
     public void remove(DataKey k) throws DictionaryException {
         // Write this method
+        // Track the current node
+        Node locationNode = searchDict(root, k);
+
+        // Try to delete the node
+        Node node = deleteNode(root, k);
+
+        // If the node deleted is the same as the root, assign a new root
+        if(locationNode.getData().getDataKey().compareTo(root.getData().getDataKey()) == 0) {
+            root = node;
+        }
+
+    }
+
+    private Node deleteNode(Node root, DataKey key) {
+        if (root == null) return root;
+
+        // Compare the key with the root's key using the compareTo method
+        int cmp = key.compareTo(root.getData().getDataKey());
+
+        // If the key to be deleted is smaller than the root's key, then it lies in the left subtree
+        if (cmp < 0)
+            root.setLeftChild(deleteNode(root.getLeftChild(), key));
+
+        // If the key to be deleted is greater than the root's key, then it lies in the right subtree
+        else if (cmp > 0)
+            root.setRightChild(deleteNode(root.getRightChild(), key));
+
+        // If the key is the same as the root's key, then this is the node to be deleted
+        else {
+            // Node with only one child or no child
+            if (root.getLeftChild() == null) {
+                Node temp = root.getRightChild();
+                if (temp != null)
+                    temp.setParent(root.getParent()); // Update the parent of the child
+                return temp;
+            } else if (root.getRightChild() == null) {
+                Node temp = root.getLeftChild();
+                if (temp != null)
+                    temp.setParent(root.getParent()); // Update the parent of the child
+                return temp;
+            }
+
+            // Node with two children: Get the inorder successor (smallest in the right subtree)
+            Node successor = minValueNode(root.getRightChild());
+
+            // Copy the inorder successor's content to this node
+            root.setData(successor.getData());
+
+            // Delete the inorder successor
+            root.setRightChild(deleteNode(root.getRightChild(), successor.getData().getDataKey()));
+        }
+        return root;
     }
 
     /**
@@ -106,10 +144,86 @@ public class OrderedDictionary implements OrderedDictionaryADT {
     @Override
     public BirdRecord successor(DataKey k) throws DictionaryException{
         // Write this method
-        return null; // change this statement
+        Node myRoot = root;
+
+        // If the root is null, the DB is empty
+        if(myRoot == null) {
+            return null;
+        }
+//        System.out.println(myRoot.getData().getDataKey().getBirdName());
+
+        if (root.isEmpty()) {
+            throw new DictionaryException("There is no record matches the given key");
+        }
+
+        // Search for the node with the given key
+        Node node = searchDict(myRoot, k);
+
+        // If the node can't be found
+        if(node == null) {
+            System.out.println("Bird could not be found");
+            return null;
+        }
+
+        // If the node is the largest node, it has no successor
+        if(node.getData() == largest()) {
+            return null;
+        }
+
+        // If the node has a right child, return the min node on that side
+        if(node.hasRightChild()) {
+            return minValueNode(node.getRightChild()).getData();
+        }
+
+
+        Node successor = null;
+        while(myRoot != null) {
+            // Search the left side
+            if(node.getData().getDataKey().compareTo(myRoot.getData().getDataKey()) < 0) {
+                successor = myRoot;
+                myRoot = myRoot.getLeftChild();
+            } else if(node.getData().getDataKey().compareTo(myRoot.getData().getDataKey()) > 0) { // Search the right side
+                myRoot = myRoot.getRightChild();
+            } else break; // If it's a match break the loop
+        }
+
+        if(successor != null) { // If a successor has been found, return it
+            return successor.getData();
+        } else return null; // Else return null
     }
 
-   
+    // Helper function to find min node in a given subtreee
+    private Node minValueNode(Node node) {
+        Node current = node;
+        // Loop down to find the leftmost leaf
+        while (current != null && current.getLeftChild() != null)
+            current = current.getLeftChild();
+        return current;
+    }
+
+    // Helper function to find max node in a given subtree
+    private Node maxValueNode(Node node) {
+        Node current = node;
+        // Loop down to find the leftmost leaf
+        while (current != null && current.getRightChild() != null)
+            current = current.getRightChild();
+        return current;
+    }
+
+
+    // Helper function that takes a key and returns the node with that key
+    private Node searchDict(Node node, DataKey k) {
+        // If the node is null or the key matches, return the node
+        if(node == null || node.getData().getDataKey().compareTo(k) == 0) return node;
+
+        // If the key is less than the current nodes key, search left
+        if(k.compareTo(node.getData().getDataKey()) < 0)
+            return searchDict(node.getLeftChild(), k);
+
+        // Else search right
+        return searchDict(node.getRightChild(), k);
+    }
+
     /**
      * Returns the predecessor of k (the record from the ordered dictionary with
      * largest key smaller than k; it returns null if the given key has no
@@ -122,7 +236,37 @@ public class OrderedDictionary implements OrderedDictionaryADT {
     @Override
     public BirdRecord predecessor(DataKey k) throws DictionaryException{
         // Write this method
-        return null; // change this statement
+        Node myRoot = root;
+
+        if (root.isEmpty()) {
+            throw new DictionaryException("There is no record matches the given key");
+        }
+
+        // Search for the node with the given key
+        Node node = searchDict(myRoot, k);
+
+        // If the node is the smallest, there can be no predecessor
+        if(node.getData() == smallest()) {
+            return null;
+        }
+
+        // If the node has a left child, return the max node on that side
+        if(node.hasLeftChild()) {
+            return maxValueNode(node.getLeftChild()).getData();
+        }
+
+        Node parent = node.getParent();
+
+        // Search the parents to rise up the tree
+        while(parent != null && node == parent.getLeftChild()) {
+            node = parent;
+            parent = parent.getParent();
+        }
+        // If the parent is null, no predecessor could be found
+        if(parent == null) {
+            return null;
+        } else return parent.getData(); // Else return the parent
+
     }
 
     /**
@@ -235,10 +379,10 @@ public class OrderedDictionary implements OrderedDictionaryADT {
         }
     }
 
-
     /* Returns true if the dictionary is empty, and true otherwise. */
     @Override
     public boolean isEmpty (){
+        if(root == null) return true;
         return root.isEmpty();
     }
 }

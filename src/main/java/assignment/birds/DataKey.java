@@ -31,7 +31,7 @@ public class DataKey {
                 int compare = this.birdName.compareTo(k.getBirdName());
                 if (compare == 0){
                      return 0;
-                } 
+                }
                 else if (compare < 0) {
                     return -1;
                 }
@@ -40,6 +40,6 @@ public class DataKey {
                     return -1;
             }
             return 1;
-            
+
 	}
 }

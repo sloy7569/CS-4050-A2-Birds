@@ -60,44 +60,62 @@ public class BirdsController implements Initializable {
     }
 
     public void find() {
+        // Create a new key for the current bird
         DataKey key = new DataKey(this.name.getText(), birdSize);
+
+        // Try to find the bird in the db
         try {
             bird = database.find(key);
             showBird();
         } catch (DictionaryException ex) {
-            displayAlert(ex.getMessage());
+            displayAlert(ex.getMessage()); // Display error if not found
         }
     }
 
     public void delete() {
-        BirdRecord previousBird = null;
-        try {
-            previousBird = database.predecessor(bird.getDataKey());
-        } catch (DictionaryException ex) {
-
-        }
         BirdRecord nextBird = null;
+        // Try to find the successor bird, if not assign null
         try {
             nextBird = database.successor(bird.getDataKey());
-        } catch (DictionaryException ex) {
+        } catch(DictionaryException de) {
+            System.out.println("Could not find bird successor: " + de);
+        }
 
-        }
-        DataKey key = bird.getDataKey();
+        // Try to find predecessor bird, if not assign null
+        BirdRecord prevBird = null;
         try {
-            database.remove(key);
-        } catch (DictionaryException ex) {
-            System.out.println("Error in delete "+ ex);
+            prevBird = database.predecessor(bird.getDataKey());
+        } catch(DictionaryException de) {
+            System.out.println("Could not find bird predecessor: " + de);
         }
+
+        try {
+            // Try to remove the bird from the database
+            database.remove(bird.getDataKey());
+
+        } catch (DictionaryException de) {
+            // If it can't be done, return
+            System.out.println("Could not remove bird: " + de);
+            return;
+        }
+
+        // If the database is now empty, display an empty page
         if (database.isEmpty()) {
             this.BirdPortal.setVisible(false);
             displayAlert("No more birds in the database to show");
-        } else {
-            if (previousBird != null) {
-                bird = previousBird;
+        }   else {
+            // If there is a previous bird, display it
+            if (prevBird != null) {
+                bird = prevBird;
                 showBird();
-            } else if (nextBird != null) {
+            } else if (nextBird != null) { // Otherwise display the next bird in line
                 bird = nextBird;
+                System.out.println("Bird is now " + bird.getDataKey().getBirdName());
+
                 showBird();
+            } else { // Or show nothing if there is no previous or next bird
+                this.BirdPortal.setVisible(false);
+                displayAlert("No more birds in the database to show");
             }
         }
     }
@@ -170,10 +188,46 @@ public class BirdsController implements Initializable {
 
     public void next() {
         // Write this method;
+
+        // Get key of the current bird
+        DataKey key = bird.getDataKey();
+        System.out.println("not the problem " + bird.getDataKey().getBirdName());
+
+        try {
+            // Try to find the successor of the current bird
+            BirdRecord newBird = database.successor(bird.getDataKey());
+
+            if(newBird == null) { // If it can't be found return
+                System.out.println("error");
+                return;
+            }
+            System.out.println(bird.getDataKey().getBirdName());
+            bird = newBird;
+            showBird();
+        } catch (DictionaryException de) { // If error, print to console
+            System.out.println("There are no elements after " + bird.getDataKey().getBirdName());
+        }
     }
 
     public void previous() {
-        // Write this method
+        // Get key of current bird
+        DataKey key = bird.getDataKey();
+        System.out.println("not the problem");
+
+        try {
+            // Try to find the predecessor to current bird
+            BirdRecord tempBird = database.predecessor(key);
+            if(tempBird == null) { // If it doesn't exist, return
+                System.out.println("error");
+                return;
+            }
+            // Show the bird
+            System.out.println(bird.getDataKey().getBirdName());
+            bird = tempBird;
+            showBird();
+        } catch (DictionaryException de) { // Catch exceptions
+            System.out.println("There are no elements before " + bird.getDataKey().getBirdName());
+        }
     }
 
     public void play() {
