@@ -119,13 +119,13 @@
             <bottom>
                 <HBox alignment="CENTER" BorderPane.alignment="CENTER">
                     <children>
-                        <Label prefHeight="21.0" prefWidth="76.0" text="Bird Name" />
+                        <Label prefHeight="21.0" prefWidth="96.0" text="Character Name" />
                         <TextField fx:id="name" prefHeight="29.0" prefWidth="186.0">
                             <HBox.margin>
                                 <Insets left="10.0" />
                             </HBox.margin>
                         </TextField>
-                        <Label text="Bird Size">
+                        <Label text="Character Size">
                             <HBox.margin>
                                 <Insets left="20.0" />
                             </HBox.margin>
