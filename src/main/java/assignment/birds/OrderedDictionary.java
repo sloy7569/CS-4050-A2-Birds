@@ -1,6 +1,4 @@
-package assignment.birds;
-
-import javafx.scene.chart.PieChart;
+package assignment.gotham_characters;
 
 public class OrderedDictionary implements OrderedDictionaryADT {
 
@@ -19,7 +17,7 @@ public class OrderedDictionary implements OrderedDictionaryADT {
      * @throws assignment/birds/DictionaryException.java
      */
     @Override
-    public BirdRecord find(DataKey k) throws DictionaryException {
+    public GothamRecord find(DataKey k) throws DictionaryException {
         Node current = root;
         int comparison;
         // If the root is empty, there is nothing to search
@@ -42,19 +40,19 @@ public class OrderedDictionary implements OrderedDictionaryADT {
      * @throws birds.DictionaryException
      */
     @Override
-    public void insert(BirdRecord r) throws DictionaryException {
+    public void insert(GothamRecord r) throws DictionaryException {
         // Write this method
         //System.out.println("INSIDE INSERT");
         root = insertRecursive(root,null, r);
 
     }
 
-    private Node insertRecursive(Node root, Node parent, BirdRecord r) {
+    private Node insertRecursive(Node root, Node parent, GothamRecord r) {
         //System.out.println("INSIDE INSERTRECURSIVE");
         if(root == null){
             root = new Node(r);
             //System.out.println("PRINT THIS MESSAGE IF THIS GOES THRU");
-            //System.out.println(root.getData().getDataKey().getBirdName());
+            //System.out.println(root.getData().getDataKey().getCharacterName());
             return root;
         }
         //System.out.println("ABOUT TO COMPARRE");
@@ -142,7 +140,7 @@ public class OrderedDictionary implements OrderedDictionaryADT {
      * @throws birds.DictionaryException
      */
     @Override
-    public BirdRecord successor(DataKey k) throws DictionaryException{
+    public GothamRecord successor(DataKey k) throws DictionaryException{
         // Write this method
         Node myRoot = root;
 
@@ -150,7 +148,7 @@ public class OrderedDictionary implements OrderedDictionaryADT {
         if(myRoot == null) {
             return null;
         }
-//        System.out.println(myRoot.getData().getDataKey().getBirdName());
+//        System.out.println(myRoot.getData().getDataKey().getCharacterName());
 
         if (root.isEmpty()) {
             throw new DictionaryException("There is no record matches the given key");
@@ -234,7 +232,7 @@ public class OrderedDictionary implements OrderedDictionaryADT {
      * @throws birds.DictionaryException
      */
     @Override
-    public BirdRecord predecessor(DataKey k) throws DictionaryException{
+    public GothamRecord predecessor(DataKey k) throws DictionaryException{
         // Write this method
         Node myRoot = root;
 
@@ -279,7 +277,7 @@ public class OrderedDictionary implements OrderedDictionaryADT {
     //I REMOVED THE "throws DictionaryException" FROM BOTH smallest AND largest CAUSE IT WASNT WORKING
     //ALSO DO THEY EVEN NEED TO THROW AN EXCEPTION??
     @Override
-    public BirdRecord smallest(){
+    public GothamRecord smallest(){
         // Write this method
         return findLargestSmallest(root, 1);
 
@@ -288,12 +286,12 @@ public class OrderedDictionary implements OrderedDictionaryADT {
     }
 
     /* This is old code
-    private BirdRecord smallRecur(Node root, BirdRecord smallestRec){
+    private GothamRecord smallRecur(Node root, GothamRecord smallestRec){
         if(root == null){
             return null;
         }
         smallestRec = root.getData();
-        System.out.println(smallestRec.getDataKey().getBirdName());
+        System.out.println(smallestRec.getDataKey().getCharacterName());
         smallRecur(root.getLeftChild(), smallestRec);
         return smallestRec;
     }
@@ -305,7 +303,7 @@ public class OrderedDictionary implements OrderedDictionaryADT {
 	 * null if the dictionary is empty.
      */
     @Override
-    public BirdRecord largest(){
+    public GothamRecord largest(){
         // Write this method
         return findLargestSmallest(root, -1);
     }
@@ -315,13 +313,13 @@ public class OrderedDictionary implements OrderedDictionaryADT {
      * the largest/smallest value. The size parameter should either be
      * (-1) for largest(), or (1) for smallest.
      */
-    private BirdRecord findLargestSmallest(Node tempNode, int size){
+    private GothamRecord findLargestSmallest(Node tempNode, int size){
         if(root == null){
             return null;
         }
 
-        BirdRecord leftMin, rightMin;
-        BirdRecord min = tempNode.getData();
+        GothamRecord leftMin, rightMin;
+        GothamRecord min = tempNode.getData();
 
         //Recurse through left subtree
         if(tempNode.hasLeftChild()){
@@ -342,26 +340,26 @@ public class OrderedDictionary implements OrderedDictionaryADT {
     }
 
 /*
-    private BirdRecord traversal(BirdRecord smallest){
+    private GothamRecord traversal(GothamRecord smallest){
         if(root == null){
             return null;
         }
         smallest = traversalRecursive(root, smallest);
-        System.out.println(smallest.getDataKey().getBirdName() + "popopopopop");
+        System.out.println(smallest.getDataKey().getCharacterName() + "popopopopop");
         return smallest;
     }
 
-    private BirdRecord traversalRecursive(Node root, BirdRecord smallest){
+    private GothamRecord traversalRecursive(Node root, GothamRecord smallest){
         if(root != null) {
             traversalRecursive(root.getLeftChild(), smallest);
             if(root.getData().getDataKey().compareTo(smallest.getDataKey()) == 1){
                 System.out.println("YES THIS IS SMALLER");
                 smallest = root.getData();
-                System.out.println(smallest.getDataKey().getBirdName());
+                System.out.println(smallest.getDataKey().getCharacterName());
             }
             traversalRecursive(root.getRightChild(), smallest);
         }
-        System.out.println("The last value of smallest is" + smallest.getDataKey().getBirdName());
+        System.out.println("The last value of smallest is" + smallest.getDataKey().getCharacterName());
         return smallest;
     }
 
@@ -374,7 +372,7 @@ public class OrderedDictionary implements OrderedDictionaryADT {
     private void inorderRecur(Node root){
         if(root != null){
             inorderRecur(root.getLeftChild());
-            System.out.print(root.getData().getDataKey().getBirdName() +" ");
+            System.out.print(root.getData().getDataKey().getCharacterName() +" ");
             inorderRecur(root.getRightChild());
         }
     }

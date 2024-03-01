@@ -1,4 +1,4 @@
-package assignment.birds;
+package assignment.gotham_characters;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -27,14 +27,14 @@ import java.util.logging.Logger;
  *
  * @author Ouda
  */
-public class BirdsController implements Initializable {
+public class GothamController implements Initializable {
 
     @FXML
     private MenuBar mainMenu;
     @FXML
     private ImageView image;
     @FXML
-    private BorderPane BirdPortal;
+    private BorderPane GothamPortal;
     @FXML
     private Label title;
     @FXML
@@ -50,8 +50,8 @@ public class BirdsController implements Initializable {
     Media media;
     MediaPlayer player;
     OrderedDictionary database = null;
-    BirdRecord bird = null;
-    int birdSize = 1;
+    GothamRecord character = null;
+    int characterSize = 1;
 
     @FXML
     public void exit() {
@@ -60,77 +60,77 @@ public class BirdsController implements Initializable {
     }
 
     public void find() {
-        // Create a new key for the current bird
-        DataKey key = new DataKey(this.name.getText(), birdSize);
+        // Create a new key for the current character
+        DataKey key = new DataKey(this.name.getText(), characterSize);
 
-        // Try to find the bird in the db
+        // Try to find the character in the db
         try {
-            bird = database.find(key);
-            showBird();
+            character = database.find(key);
+            showCharacter();
         } catch (DictionaryException ex) {
             displayAlert(ex.getMessage()); // Display error if not found
         }
     }
 
     public void delete() {
-        BirdRecord nextBird = null;
-        // Try to find the successor bird, if not assign null
+        GothamRecord nextCharacter = null;
+        // Try to find the successor character, if not assign null
         try {
-            nextBird = database.successor(bird.getDataKey());
+            nextCharacter = database.successor(character.getDataKey());
         } catch(DictionaryException de) {
-            System.out.println("Could not find bird successor: " + de);
+            System.out.println("Could not find character successor: " + de);
         }
 
-        // Try to find predecessor bird, if not assign null
-        BirdRecord prevBird = null;
+        // Try to find predecessor character, if not assign null
+        GothamRecord prevCharacter = null;
         try {
-            prevBird = database.predecessor(bird.getDataKey());
+            prevCharacter = database.predecessor(character.getDataKey());
         } catch(DictionaryException de) {
-            System.out.println("Could not find bird predecessor: " + de);
+            System.out.println("Could not find character predecessor: " + de);
         }
 
         try {
-            // Try to remove the bird from the database
-            database.remove(bird.getDataKey());
+            // Try to remove the character from the database
+            database.remove(character.getDataKey());
 
         } catch (DictionaryException de) {
             // If it can't be done, return
-            System.out.println("Could not remove bird: " + de);
+            System.out.println("Could not remove character: " + de);
             return;
         }
 
         // If the database is now empty, display an empty page
         if (database.isEmpty()) {
-            this.BirdPortal.setVisible(false);
+            this.GothamPortal.setVisible(false);
             displayAlert("No more birds in the database to show");
         }   else {
-            // If there is a previous bird, display it
-            if (prevBird != null) {
-                bird = prevBird;
-                showBird();
-            } else if (nextBird != null) { // Otherwise display the next bird in line
-                bird = nextBird;
-                System.out.println("Bird is now " + bird.getDataKey().getBirdName());
+            // If there is a previous character, display it
+            if (prevCharacter != null) {
+                character = prevCharacter;
+                showCharacter();
+            } else if (nextCharacter != null) { // Otherwise display the next character in line
+                character = nextCharacter;
+                System.out.println("Bird is now " + character.getDataKey().getCharacterName());
 
-                showBird();
-            } else { // Or show nothing if there is no previous or next bird
-                this.BirdPortal.setVisible(false);
+                showCharacter();
+            } else { // Or show nothing if there is no previous or next character
+                this.GothamPortal.setVisible(false);
                 displayAlert("No more birds in the database to show");
             }
         }
     }
 
-    private void showBird() {
+    private void showCharacter() {
         play.setDisable(false);
         puase.setDisable(true);
         if (player != null) {
             player.stop();
         }
-        String img = bird.getImage();
-        Image birdImage = new Image("file:src/main/resources/assignment/birds/images/" + img);
-        image.setImage(birdImage);
-        title.setText(bird.getDataKey().getBirdName());
-        about.setText(bird.getAbout());
+        String img = character.getImage();
+        Image characterImage = new Image("file:src/main/resources/assignment/birds/images/" + img);
+        image.setImage(characterImage);
+        title.setText(character.getDataKey().getCharacterName());
+        about.setText(character.getAbout());
     }
 
     private void displayAlert(String msg) {
@@ -158,13 +158,13 @@ public class BirdsController implements Initializable {
     public void getSize() {
         switch (this.size.getValue().toString()) {
             case "Small":
-                this.birdSize = 1;
+                this.characterSize = 1;
                 break;
             case "Medium":
-                this.birdSize = 2;
+                this.characterSize = 2;
                 break;
             case "Large":
-                this.birdSize = 3;
+                this.characterSize = 3;
                 break;
             default:
                 break;
@@ -173,65 +173,65 @@ public class BirdsController implements Initializable {
 
     public void first() {
         // Write this method
-        bird = database.smallest();
-        System.out.println(bird.getDataKey().getBirdName());
+        character = database.smallest();
+        System.out.println(character.getDataKey().getCharacterName());
         database.inorder();
-        showBird();
+        showCharacter();
     }
 
     public void last() {
         // Write this method
-        bird = database.largest();
-        System.out.println(bird.getDataKey().getBirdName());
-        showBird();
+        character = database.largest();
+        System.out.println(character.getDataKey().getCharacterName());
+        showCharacter();
     }
 
     public void next() {
         // Write this method;
 
-        // Get key of the current bird
-        DataKey key = bird.getDataKey();
-        System.out.println("not the problem " + bird.getDataKey().getBirdName());
+        // Get key of the current character
+        DataKey key = character.getDataKey();
+        System.out.println("not the problem " + character.getDataKey().getCharacterName());
 
         try {
-            // Try to find the successor of the current bird
-            BirdRecord newBird = database.successor(bird.getDataKey());
+            // Try to find the successor of the current character
+            GothamRecord newCharacter = database.successor(character.getDataKey());
 
-            if(newBird == null) { // If it can't be found return
+            if(newCharacter == null) { // If it can't be found return
                 System.out.println("error");
                 return;
             }
-            System.out.println(bird.getDataKey().getBirdName());
-            bird = newBird;
-            showBird();
+            System.out.println(character.getDataKey().getCharacterName());
+            character = newCharacter;
+            showCharacter();
         } catch (DictionaryException de) { // If error, print to console
-            System.out.println("There are no elements after " + bird.getDataKey().getBirdName());
+            System.out.println("There are no elements after " + character.getDataKey().getCharacterName());
         }
     }
 
     public void previous() {
-        // Get key of current bird
-        DataKey key = bird.getDataKey();
+        // Get key of current character
+        DataKey key = character.getDataKey();
         System.out.println("not the problem");
 
         try {
-            // Try to find the predecessor to current bird
-            BirdRecord tempBird = database.predecessor(key);
-            if(tempBird == null) { // If it doesn't exist, return
+            // Try to find the predecessor to current character
+            GothamRecord tempCharacter = database.predecessor(key);
+            if(tempCharacter == null) { // If it doesn't exist, return
                 System.out.println("error");
                 return;
             }
-            // Show the bird
-            System.out.println(bird.getDataKey().getBirdName());
-            bird = tempBird;
-            showBird();
+            // Show the character
+            System.out.println(character.getDataKey().getCharacterName());
+            character = tempCharacter;
+            showCharacter();
         } catch (DictionaryException de) { // Catch exceptions
-            System.out.println("There are no elements before " + bird.getDataKey().getBirdName());
+            System.out.println("There are no elements before " + character.getDataKey().getCharacterName());
         }
     }
 
     public void play() {
-        String filename = "src/main/resources/assignment/birds/sounds/" + bird.getSound();
+        String filename = "src/main/resources/assignment/birds/sounds/" + character.getSound();
         media = new Media(new File(filename).toURI().toString());
         player = new MediaPlayer(media);
         play.setDisable(true);
@@ -251,10 +251,10 @@ public class BirdsController implements Initializable {
         Scanner input;
         int line = 0;
         try {
-            String birdName = "";
+            String characterName = "";
             String description;
             int size = 0;
-            input = new Scanner(new File("BirdsDatabase.txt"));
+            input = new Scanner(new File("GothamDatabase.txt"));
             while (input.hasNext()) // read until  end of file
             {
                 String data = input.nextLine();
@@ -263,22 +263,22 @@ public class BirdsController implements Initializable {
                         size = Integer.parseInt(data);
                         break;
                     case 1:
-                        birdName = data;
+                        characterName = data;
                         break;
                     default:
                         description = data;
-                        database.insert(new BirdRecord(new DataKey(birdName, size), description, birdName + ".mp3", birdName + ".jpg"));
+                        database.insert(new GothamRecord(new DataKey(characterName, size), description, characterName + ".mp3", characterName + ".jpg"));
                         break;
                 }
                 line++;
             }
         } catch (IOException e) {
-            System.out.println("There was an error in reading or opening the file: BirdsDatabase.txt");
+            System.out.println("There was an error in reading or opening the file: GothamDatabase.txt");
             System.out.println(e.getMessage());
         } catch (DictionaryException ex) {
-            Logger.getLogger(BirdsController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GothamController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        this.BirdPortal.setVisible(true);
+        this.GothamPortal.setVisible(true);
         this.first();
     }
 

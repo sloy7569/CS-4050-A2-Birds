@@ -1,4 +1,4 @@
-package assignment.birds;
+package assignment.gotham_characters;
 
 /**
  * a class Node to represent the nodes of the binary search tree. Each node will
@@ -7,31 +7,31 @@ package assignment.birds;
  */
 
 public class Node {
-	private BirdRecord _data;
+	private GothamRecord _data;
 	private Node _leftChild;
 	private Node _rightChild;
 	private Node _parent;
 
 	// default constructor
 	public Node() {
-		this(new BirdRecord()); // storing null Record objects
+		this(new GothamRecord()); // storing null Record objects
 	}
 
-	public Node(BirdRecord data) {
+	public Node(GothamRecord data) {
 		this(data, null, null);
 	}
 
-	public Node(BirdRecord data, Node leftChild, Node rightChild) {
+	public Node(GothamRecord data, Node leftChild, Node rightChild) {
 		_data = data;
 		setLeftChild(leftChild);
 		setRightChild(rightChild);
 	}
 
-	public BirdRecord getData() {
+	public GothamRecord getData() {
 		return _data;
 	}
 
-	public void setData(BirdRecord data) {
+	public void setData(GothamRecord data) {
 		_data = data;
 	}
 

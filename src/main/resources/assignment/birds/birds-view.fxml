@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="730.0" prefWidth="971.0" style="-fx-background-image: url(&quot;file:src/main/resources/assignment/birds/images/UMBackground.png&quot;); " xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="assignment.birds.BirdsController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="730.0" prefWidth="971.0" style="-fx-background-image: url(&quot;file:src/main/resources/assignment/birds/images/UMBackground.png&quot;); " xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="assignment.gotham_characters.GothamController">
     <top>
         <MenuBar fx:id="mainMenu" BorderPane.alignment="CENTER">
             <menus>
@@ -28,7 +28,7 @@
         </MenuBar>
     </top>
     <center>
-        <BorderPane fx:id="BirdPortal" prefHeight="200.0" prefWidth="200.0" visible="false" BorderPane.alignment="CENTER">
+        <BorderPane fx:id="GothamPortal" prefHeight="200.0" prefWidth="200.0" visible="false" BorderPane.alignment="CENTER">
             <BorderPane.margin>
                 <Insets bottom="20.0" left="40.0" right="40.0" top="40.0" />
             </BorderPane.margin>

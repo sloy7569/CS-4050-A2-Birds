@@ -1,4 +1,4 @@
-package assignment.birds;
+package assignment.gotham_characters;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -11,7 +11,7 @@ import javafx.stage.Stage;
  *
  * @author Ouda
  */
-public class Birds extends Application {
+public class GothamCharacters extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -19,7 +19,7 @@ public class Birds extends Application {
 
         Scene scene = new Scene(root);
 
-        stage.getIcons().add(new Image("file:src/main/resources/assignment/birds/images/UMIcon.png"));
+        stage.getIcons().add(new Image("file:src/main/resources/assignment/gotham_characters/images/UMIcon.png"));
         stage.setTitle("Gotham Portal");
 
         stage.setScene(scene);
